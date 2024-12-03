@@ -11,14 +11,41 @@ AOC;
 
 
 //Part One
-$count = 0;
-
 preg_match_all('/mul\(\d+,\d+\)/', trim($input), $matches);
 
-foreach ($matches[0] as $match){
-    preg_match('/\d+,\d+/', $match, $nums);
-    $num = explode(',', $nums[0]);
-    $count += $num[0] * $num[1];
+function mul($matches){
+    $count = 0;
+    foreach ($matches as $match){
+        preg_match('/\d+,\d+/', $match, $nums);
+        $num = explode(',', $nums[0]);
+        $count += $num[0] * $num[1];
+    }
+
+    return $count;
 }
 
+$count = mul($matches[0]);
+
 echo 'Part one: ' . $count . PHP_EOL;
+
+//Part Two
+$count = 0;
+
+$dont = explode("don't()", $input);
+$beginning = array_shift($dont);
+
+
+preg_match_all('/mul\(\d+,\d+\)/', $beginning, $beforeDont);
+$count += mul($beforeDont[0]);
+
+foreach($dont as $item){
+    $do = explode("do()", $item);
+    if (count($do)>1){
+        array_shift($do);
+        $string = implode('', $do);
+        preg_match_all('/mul\(\d+,\d+\)/', $string, $dos);
+        $count += mul($dos[0]);
+    }
+}
+
+echo 'Part Two: ' . $count . PHP_EOL;
