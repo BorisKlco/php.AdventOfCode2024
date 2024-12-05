@@ -13,8 +13,8 @@ MAMMMXMMMM
 MXMXAXMASX
 ";
 
-//Part One
 $score = 0;
+$score2 = 0;
 $grid = explode(PHP_EOL, trim($input));
 $puzzle = [];
 
@@ -33,10 +33,14 @@ for ($y=0; $y < $height; $y++){
             $score += risingDiagonal($x,$y);
             $score += fallingDiagonal($x,$y);
         }
+
+        if($puzzle[$y][$x] == 'A'){
+            $score2 += sam($x, $y);
+        }
     }
 }
 
-var_dump($score);
+echo "Part one: {$score}\nPart two: {$score2}\n";
 
 function horizontal($x,$y){
     global $puzzle;
@@ -118,5 +122,27 @@ function fallingDiagonal($x,$y){
         $score++;
     }
     return $score;
+
+}
+
+
+function sam($x,$y){
+    global $puzzle;
+    $falling = '';
+    $rising = '';
+    $score = 0;
+    $falling .= $puzzle[$y-1][$x-1] ?? '';
+    $falling .= $puzzle[$y+1][$x+1] ?? '';
+    $rising .= $puzzle[$y+1][$x-1] ?? '';
+    $rising .= $puzzle[$y-1][$x+1] ?? '';
+
+    if ($falling == "SM" || $falling == "MS"){
+        $score++;
+    }
+    if ($rising == "SM" || $rising == "MS"){
+        $score++;
+    }
+
+    return $score == 2 ? 1 : 0 ;
 
 }
